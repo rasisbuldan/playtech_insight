@@ -1,21 +1,31 @@
+/****** SOUNDBOX v1.0 ******/
+/* To do:   1. Test WS2811 Color (RGB/GRB)
+            2. Autocalibration (with button input)
+            3. LED color breathing / shift
+            4. Add continous trigger checking
+            5. Randomize note location (sensor)
+*/
+
 #include <BH1750.h>
 #include <FastLED.h>
 #include <Wire.h>
 
-// Macro
-#define NUM_LEDS 36     // Number of LED
-#define DATA_PIN 3      // LED pin
-#define TCAADDR 0x70    // I2C multiplexer
+/* Macro */
+#define NUM_LEDS_PER_STRIP 36
+#define DATA_PIN 3
+#define NUM_STRIP 8
+#define TCAADDR 0x70
 
-// Definition
+/* Object Declaration */
 BH1750 lightMeter;
-CRGB leds[NUM_LEDS];
+CRGB leds[NUM_LEDS_PER_STRIP];
 
-// Global variable
+/* Global Variable */
 uint16_t LM[9];         // Lux value [1-8]
 int treshold = 10;      // Lux treshold to trigger note sound
 int i;
 
+/* I2C Multiplexer Selector */
 void tcaselect(uint8_t i) {
     if (i > 7) return;
     Wire.beginTransmission(TCAADDR);
@@ -23,55 +33,59 @@ void tcaselect(uint8_t i) {
     Wire.endTransmission();
 }
 
+/* Reading lux value of BH1750 */
 void readLight() {
     for (i = 1; i <= 8; i++) {
         tcaselect(i);
         LM[i] = lightMeter.readLightLevel();
-        //snprintf(buf, "L[%d] : %d | ", i, LM[i]);
+        /* Debugging :
         Serial.print("L[");
         Serial.print(i);
         Serial.print("]: ");
         Serial.print(LM[i]);
         Serial.print(" | ");
         delay(25);
+        */
     }
 }
 
+/* Lux Tresholding for Serial Print */
 void serialNote() {
     for (i = 1; i <= 8; i++) {
         if (LM[i] > treshold) {
             switch (i) {
                 case 1:
-                    Serial.print("A");
+                    Serial.println("C");
                     break;
                 case 2:
-                    Serial.print("B");
+                    Serial.println("D");
                     break;
                 case 3:
-                    Serial.print("C");
+                    Serial.println("E");
                     break;
                 case 4:
-                    Serial.print("D");
+                    Serial.println("F");
                     break;
                 case 5:
-                    Serial.print("E");
+                    Serial.println("G");
                     break;
                 case 6:
-                    Serial.print("F");
+                    Serial.println("A");
                     break;
                 case 7:
-                    Serial.print("G");
+                    Serial.println("B");
                     break;
                 case 8:
-                    Serial.print("H");
+                    Serial.println("H");
                     break;
             }
         }
     }
+    Serial.println("");
 }
 
+/* LED Color (needs rework) */
 void shiftLED() {
-    /* LED breathing */
     for (int i = 0; i <= 36; i++) {
         switch (i % 3) {
             case 0:
@@ -91,35 +105,35 @@ void shiftLED() {
     FastLED.show();
 }
 
-void setup() {
+void setup(){
+    /* Initialization */
     Serial.begin(57600);
     Wire.begin();        // I2C begin
     lightMeter.begin();  // BH1750 begin
+    
+    Serial.println("Starting SOUNDBOX v1.0");
 
-    if (lightMeter.begin()) {
-        Serial.println(F("BH1750 initialized"));
-    } else {
-        Serial.println(F("Error initializing BH1750"));
+    /* WS2811 Setup */
+    Serial.print("Initializing WS2811 LED");
+    for(i = DATA_PIN; i <= (DATA_PIN + NUM_STRIP); i++){
+        FastLED.addLeds<WS2811, i>(leds, NUM_LEDS_PER_STRIP);
+        Serial.print(".");
     }
-
-    Serial.println(F("BH1750 Test begin"));
-    FastLED.addLeds<WS2811, 3, RGB>(leds, NUM_LEDS);
-    FastLED.addLeds<WS2811, 4, RGB>(leds, NUM_LEDS);
-    FastLED.addLeds<WS2811, 5, RGB>(leds, NUM_LEDS);
-    FastLED.addLeds<WS2811, 6, RGB>(leds, NUM_LEDS);
-    FastLED.addLeds<WS2811, 7, RGB>(leds, NUM_LEDS);
-    FastLED.addLeds<WS2811, 8, RGB>(leds, NUM_LEDS);
-    FastLED.addLeds<WS2811, 9, RGB>(leds, NUM_LEDS);
-    FastLED.addLeds<WS2811, 10, RGB>(leds, NUM_LEDS);
-    FastLED.addLeds<WS2811, 11, RGB>(leds, NUM_LEDS);
     FastLED.setBrightness(255);
+    Serial.println("Ready!");
+    
+    /* BH1750 Setup */
+    Serial.print("Initializing BH1750");
+    while (!lightMeter.begin()) {
+        Serial.print(".");
+    } else {
+        Serial.println("Ready!");
+    }
 }
 
-void loop() {
+void loop(){
     readLight();
     shiftLED();
-
-    //Serial.print("Loop");
-    Serial.println("");
-    delay(25);
+    
+    delay(10);
 }

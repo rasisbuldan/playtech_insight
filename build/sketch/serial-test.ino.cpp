@@ -2,12 +2,13 @@
 #line 1 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\serial-test\\serial-test.ino"
 /* Global Variable */
 int i;
+int delayTime = 250;
 
-#line 4 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\serial-test\\serial-test.ino"
+#line 5 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\serial-test\\serial-test.ino"
 void setup();
-#line 9 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\serial-test\\serial-test.ino"
+#line 10 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\serial-test\\serial-test.ino"
 void loop();
-#line 4 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\serial-test\\serial-test.ino"
+#line 5 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\serial-test\\serial-test.ino"
 void setup() {
     Serial.begin(57600);
     randomSeed(analogRead(0));
@@ -18,39 +19,39 @@ void loop() {
     switch (i) {
         case 1:
             Serial.println("C");
-            delay(100);
+            delay(delayTime);
             break;
         case 2:
             Serial.println("D");
-            delay(100);
+            delay(delayTime);
             break;
         case 3:
             Serial.println("E");
-            delay(100);
+            delay(delayTime);
             break;
         case 4:
             Serial.println("F");
-            delay(100);
+            delay(delayTime);
             break;
         case 5:
             Serial.println("G");
-            delay(100);
+            delay(delayTime);
             break;
         case 6:
             Serial.println("A");
-            delay(100);
+            delay(delayTime);
             break;
         case 7:
             Serial.println("B");
-            delay(100);
+            delay(delayTime);
             break;
         case 8:
             Serial.println("H");
-            delay(100);
+            delay(delayTime);
             break;
         default:
             Serial.println("Error!");
-            delay(100);
+            delay(delayTime);
             break;
     }
     //Serial.println("");
