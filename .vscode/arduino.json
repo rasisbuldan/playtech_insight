@@ -1,7 +1,7 @@
 {
     "programmer": "ArduinoISP",
     "board": "arduino:avr:nano",
-    "configuration": "cpu=atmega328old",
-    "port": "COM4",
-    "sketch": "BH1750test\\BH1750test.ino"
+    "port": "COM3",
+    "sketch": "BH1750test\\BH1750test.ino",
+    "configuration": "cpu=atmega328old"
 }

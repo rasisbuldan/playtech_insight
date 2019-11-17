@@ -4,7 +4,7 @@
 
 // Macro
 #define NUM_LEDS 36   // Number of LED
-#define DATA_PIN 5    // LED pin
+#define DATA_PIN 3    // LED pin
 #define TCAADDR 0x70  // I2C multiplexer
 
 // Definition
@@ -27,9 +27,13 @@ void tcaselect(uint8_t i) {
 void readLight() {
     for (i = 1; i <= 8; i++) {
         tcaselect(i);
-        uint16_t LM[i] = lightMeter.readLightLevel();
-        snprintf(buf, "L[%d] : %d | ", i, LM[i]);
-        Serial.println(buf);
+        LM[i] = lightMeter.readLightLevel();
+        //snprintf(buf, "L[%d] : %d | ", i, LM[i]);
+        Serial.print("L[");
+        Serial.print(i);
+        Serial.print("]: ");
+        Serial.print(LM[i]);
+        Serial.print(" | ");
         delay(25);
     }
 }
@@ -39,28 +43,28 @@ void serialNote() {
         if (LM[i] > treshold) {
             switch (i) {
                 case 1:
-                    Serial.print("C");
-                    break;
-                case 2:
-                    Serial.print("D");
-                    break;
-                case 3:
-                    Serial.print("E");
-                    break;
-                case 4:
-                    Serial.print("F");
-                    break;
-                case 5:
-                    Serial.print("G");
-                    break;
-                case 6:
                     Serial.print("A");
                     break;
-                case 7:
+                case 2:
                     Serial.print("B");
                     break;
+                case 3:
+                    Serial.print("C");
+                    break;
+                case 4:
+                    Serial.print("D");
+                    break;
+                case 5:
+                    Serial.print("E");
+                    break;
+                case 6:
+                    Serial.print("F");
+                    break;
+                case 7:
+                    Serial.print("G");
+                    break;
                 case 8:
-                    Serial.print("C1");
+                    Serial.print("H");
                     break;
             }
         }
@@ -89,7 +93,7 @@ void shiftLED() {
 }
 
 void setup() {
-    Serial.begin(115200);
+    Serial.begin(57600);
     Wire.begin();        // I2C begin
     lightMeter.begin();  // BH1750 begin
 
@@ -100,7 +104,15 @@ void setup() {
     }
 
     Serial.println(F("BH1750 Test begin"));
-    FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
+    FastLED.addLeds<WS2811, 3, RGB>(leds, NUM_LEDS);
+    FastLED.addLeds<WS2811, 4, RGB>(leds, NUM_LEDS);
+    FastLED.addLeds<WS2811, 5, RGB>(leds, NUM_LEDS);
+    FastLED.addLeds<WS2811, 6, RGB>(leds, NUM_LEDS);
+    FastLED.addLeds<WS2811, 7, RGB>(leds, NUM_LEDS);
+    FastLED.addLeds<WS2811, 8, RGB>(leds, NUM_LEDS);
+    FastLED.addLeds<WS2811, 9, RGB>(leds, NUM_LEDS);
+    FastLED.addLeds<WS2811, 10, RGB>(leds, NUM_LEDS);
+    FastLED.addLeds<WS2811, 11, RGB>(leds, NUM_LEDS);
     FastLED.setBrightness(255);
 }
 
@@ -108,6 +120,7 @@ void loop() {
     readLight();
     shiftLED();
 
-    Serial.println("Loop");
+    //Serial.print("Loop");
+    Serial.println("");
     delay(25);
 }
