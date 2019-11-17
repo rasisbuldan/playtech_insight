@@ -2,7 +2,6 @@ import numpy as np
 import simpleaudio as sa
 import time
 
-
 class SoundGenerator:
     def __init__(self, f, sr, dur): # receive input of frequency, sampling rate, duration, and mode: 'wait' or 'skip'
         self.frequency = f  # Played note frequency
