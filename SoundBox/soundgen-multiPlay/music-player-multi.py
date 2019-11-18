@@ -2,7 +2,6 @@
 # To do:    1. Parallel note delay test
 #           2. Performance tuning (code cleanup?)
 
-
 # Library import
 import serial
 import os

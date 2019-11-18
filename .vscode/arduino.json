@@ -1,7 +1,7 @@
 {
     "programmer": "ArduinoISP",
-    "board": "arduino:avr:uno",
+    "board": "arduino:avr:nano",
     "port": "COM5",
-    "sketch": "serial-test/serial-test.ino",
-    "output": "build/"
+    "sketch": "SoundBox\\SoundBox.ino",
+    "configuration": "cpu=atmega328old"
 }

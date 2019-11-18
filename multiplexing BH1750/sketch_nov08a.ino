@@ -11,6 +11,8 @@ BH1750 lightMeter;
 
 #define TCAADDR 0x70
 
+int i;
+
 void tcaselect(uint8_t i) {
     if (i > 7) return;
     Wire.beginTransmission(TCAADDR);
@@ -20,7 +22,7 @@ void tcaselect(uint8_t i) {
 
 // standard Arduino setup()
 void setup() {
-    Serial.begin(9600);
+    Serial.begin(57600);
 
     // Initialize the I2C bus (BH1750 library doesn't do this automatically)
     // On esp8266 devices you can select SCL and SDA pins using Wire.begin(D4, D3);
@@ -32,16 +34,15 @@ void setup() {
 }
 
 void loop() {
-    tcaselect(4);
-    uint16_t lux = lightMeter.readLightLevel();
-    Serial.print("Light1: ");
-    Serial.print(lux);
-    Serial.println(" lx");
-    delay(1000);
-    tcaselect(7);
-    uint16_t yee = lightMeter.readLightLevel();
-    Serial.print("Light2: ");
-    Serial.print(yee);
-    Serial.println(" lx");
-    delay(1000);
+    for(i=0;i<8;i++){
+        tcaselect(i);
+        uint16_t lux = lightMeter.readLightLevel();
+        Serial.print("L[");
+        Serial.print(i);
+        Serial.print("]: ");
+        Serial.print(lux);
+        Serial.print(" | ");
+        delay(25);
+    }
+    Serial.println("");
 }

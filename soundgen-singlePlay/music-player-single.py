@@ -27,41 +27,41 @@ while True:
     data = clean_data(data)
     note = data[0]
     print("note: ",note)
-    notePath = path + "\\soundgen\\note\\" + note + ".m4a" # Set playing file name relative to working project directory ==> ${WORKFOLDER}/soundgen/note/*.m4a
+    #notePath = path + "\\soundgen\\note\\" + note + ".m4a" # Set playing file name relative to working project directory ==> ${WORKFOLDER}/soundgen/note/*.m4a
 
     # Play music from file
-    try:
+    """ try:
         os.startfile(notePath)   # Open file with name declared in notePath
     except:
-        print("File not found!")
+        print("File not found!") """
 
     # Using SoundGenerator library to generate signal -> SoundGenerator(signal freq, sampling freq, duration(s))
     # Option:   "skip" to start the sound and continue the code
     #           "wait" to start the sound and wait until it finish
-    '''if note == 'A':
-        sg = SoundGenerator(440, 44100, 3)
+    if note == 'A':
+        sg = SoundGenerator(440, 44100, 1)
         sg.play("skip")
     elif note == 'B':
-        sg = SoundGenerator(494, 44100, 3)
+        sg = SoundGenerator(494, 44100, 1)
         sg.play("skip")
     elif note == 'C':
-        sg = SoundGenerator(523, 44100, 3)
+        sg = SoundGenerator(523, 44100, 1)
         sg.play("skip")
     elif note == 'D':
-        sg = SoundGenerator(587, 44100, 3)
+        sg = SoundGenerator(587, 44100, 1)
         sg.play("skip")
     elif note == 'E':
-        sg = SoundGenerator(659, 44100, 3)
+        sg = SoundGenerator(659, 44100, 1)
         sg.play("skip")
     elif note == 'F':
-        sg = SoundGenerator(698, 44100, 3)
+        sg = SoundGenerator(698, 44100, 1)
         sg.play("skip")
     elif note == 'G':
-        sg = SoundGenerator(784, 44100, 3)
+        sg = SoundGenerator(784, 44100, 1)
         sg.play("skip")
     elif note == 'H':
-        sg = SoundGenerator(880, 44100, 3)
-        sg.play("skip")'''
+        sg = SoundGenerator(880, 44100, 1)
+        sg.play("skip")
 
     # Reset data buffer
     data = []
