@@ -23,7 +23,7 @@ CRGB leds[NUM_LEDS_PER_STRIP];
 /* Global Variable */
 uint16_t LM[8];  // Lux value [1-8]
 boolean LMx[8];
-int treshold = 20;  // Lux treshold to trigger note sound
+int treshold = 24;  // Lux treshold to trigger note sound
 int i, j;
 
 /* I2C Multiplexer Selector */
@@ -44,7 +44,6 @@ void readLight() {
         Serial.print(".");
         Serial.print(LMx[i]);
         Serial.print(" | ");
-        delay(25);
     }
     Serial.println("");
 }
@@ -87,7 +86,7 @@ void serialNote() {
         } else {
             LMx[i] = false;
         }
-        delay(5);
+        delay(25);
     }
 }
 
@@ -117,8 +116,9 @@ void shiftLED() {
 void setup() {
     /* Initialization */
     Serial.begin(57600);
+    Wire.setClock(400000);
     Wire.begin();        // I2C begin
-    lightMeter.begin();  // BH1750 begin
+    lightMeter.begin(CONTINUOUS_LOW_RES_MODE);  // BH1750 begin
 
     //Serial.println("Starting SOUNDBOX v1.0");
 
@@ -153,6 +153,6 @@ void loop() {
     j++;
     j = j % 3;
     //readLight();
-    shiftLED();
+    //shiftLED();
     serialNote();
 }
