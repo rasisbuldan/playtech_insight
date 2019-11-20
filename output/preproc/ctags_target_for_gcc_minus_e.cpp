@@ -1,20 +1,30 @@
 # 1 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
 /****** SOUNDBOX v1.0 ******/
-/* To do:   1. Test WS2811 Color (RGB/GRB) => GRB
+/* To do:   [v] 0. State (Standby,Finding,Play)
 
-            2. Autocalibration (with button input)
+            [x] 1. Autocalibration (with button input)
 
-            3. LED color breathing / shift
+            [x] 2. LED color breathing / shift
 
-            4. Add continous trigger checking
+            [v] 3. Randomize note location (sensor)
 
-            5. Randomize note location (sensor)
+            [v] 4. Test BH1750 mode
+
+            [v] 5. Check each box led pin
+
+            [x] 6. Test baud rate to 115200 or 250000
+
+            [x] 7. WS2811 data rate
+
+            [v] 8. Button interrupt (pin 2,3) => JANGAN PAKE INTERRUPT
+
+            [x] 9. Blink when change state
 
 */
-# 9 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
-# 10 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino" 2
-# 11 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino" 2
-# 12 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino" 2
+# 14 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+# 15 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino" 2
+# 16 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino" 2
+# 17 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino" 2
 
 /* Macro */
 
@@ -33,6 +43,8 @@ char note[8] = {'C', 'D', 'E', 'F', 'G', 'A', 'B', 'H'};
 char noteRandom[8];
 int treshold = 10; // Lux treshold to trigger note sound
 int i, j;
+int state;
+boolean randomized;
 
 /* I2C Multiplexer Selector */
 void tcaselect(uint8_t i) {
@@ -152,6 +164,15 @@ void randomizeNote() {
     }
 }
 
+/* Check button press (2) */
+boolean buttonIsPressed(int pin) {
+    static boolean b1_old = 0;
+    boolean b1 = digitalRead(pin);
+    boolean s1 = (b1 && !b1_old);
+    b1_old = b1;
+    return s1;
+}
+
 /* LED Color (needs rework) */
 void shiftLED() {
     for (int i = 0; i <= 36; i++) {
@@ -167,7 +188,14 @@ void shiftLED() {
     FastLED.show();
 }
 
-/* Auto-Calibrate bottom and upper */
+/* Change State */
+void changeState(){
+    state += 1;
+    if(state > 2){
+        state = 0;
+        randomized = false;
+    }
+}
 
 void setup() {
     /* Initialization */
@@ -200,20 +228,36 @@ void setup() {
         Serial.print(".");
 
     } */
-# 195 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+# 218 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
     //Serial.println("Ready!");
     for (i = 0; i < 8; i++) {
         LMx[i] = false;
     }
-    j = 0;
-    randomizeNote();
+
+    /* Variable Initialization */
+    randomized = false;
 }
 
 void loop() {
-    //j++;
-    //j = j % 3;
     //readLight();
-
-    shiftLED();
-    serialNote(1);
+    if (buttonIsPressed(2)) {
+        changeState();
+    } else {
+        if (state == 0) {
+            /* Standby */
+            shiftLED(); // Ganti ke dynamic LED
+        } else if (state == 1) {
+            /* Randomized */
+            if (!randomized) {
+                randomizeNote();
+                randomized = true;
+            }
+            shiftLED(); // Ganti ke dynamic LED
+            serialNote(1);
+        } else if (state == 2) {
+            /* Playing */
+            shiftLED(); // Ganti ke static LED
+            serialNote(0);
+        }
+    }
 }

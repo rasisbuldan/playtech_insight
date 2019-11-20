@@ -1,11 +1,16 @@
 #include <Arduino.h>
 #line 1 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
 /****** SOUNDBOX v1.0 ******/
-/* To do:   1. Test WS2811 Color (RGB/GRB) => GRB
-            2. Autocalibration (with button input)
-            3. LED color breathing / shift
-            4. Add continous trigger checking
-            5. Randomize note location (sensor)
+/* To do:   [v] 0. State (Standby,Finding,Play)
+            [x] 1. Autocalibration (with button input)
+            [x] 2. LED color breathing / shift
+            [v] 3. Randomize note location (sensor)
+            [v] 4. Test BH1750 mode
+            [v] 5. Check each box led pin
+            [x] 6. Test baud rate to 115200 or 250000
+            [x] 7. WS2811 data rate
+            [v] 8. Button interrupt (pin 2,3) => JANGAN PAKE INTERRUPT
+            [x] 9. Blink when change state
 */
 
 #include <BH1750.h>
@@ -29,23 +34,29 @@ char note[8] = {'C', 'D', 'E', 'F', 'G', 'A', 'B', 'H'};
 char noteRandom[8];
 int treshold = 10;  // Lux treshold to trigger note sound
 int i, j;
+int state;
+boolean randomized;
 
 /* I2C Multiplexer Selector */
-#line 32 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+#line 39 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
 void tcaselect(uint8_t i);
-#line 40 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+#line 47 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
 void readLight();
-#line 53 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+#line 60 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
 void serialNote(boolean random);
-#line 130 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+#line 137 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
 void randomizeNote();
-#line 150 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
-void shiftLED();
+#line 157 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+boolean buttonIsPressed(int pin);
 #line 166 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+void shiftLED();
+#line 181 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+void changeState();
+#line 189 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
 void setup();
-#line 203 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+#line 227 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
 void loop();
-#line 32 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+#line 39 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
 void tcaselect(uint8_t i) {
     if (i > 7) return;
     Wire.beginTransmission(TCAADDR);
@@ -56,7 +67,7 @@ void tcaselect(uint8_t i) {
 /* Reading lux value of BH1750 */
 void readLight() {
     for (i = 0; i < 8; i++) {
-        Serial.print("L[");
+        Serial.print("L["); 
         Serial.print(i);
         Serial.print("]: ");
         Serial.print(LM[i]);
@@ -163,6 +174,15 @@ void randomizeNote() {
     }
 }
 
+/* Check button press (2) */
+boolean buttonIsPressed(int pin) {
+    static boolean b1_old = 0;
+    boolean b1 = digitalRead(pin);
+    boolean s1 = (b1 && !b1_old);
+    b1_old = b1;
+    return s1;
+}
+
 /* LED Color (needs rework) */
 void shiftLED() {
     for (int i = 0; i <= 36; i++) {
@@ -178,7 +198,14 @@ void shiftLED() {
     FastLED.show();
 }
 
-/* Auto-Calibrate bottom and upper */
+/* Change State */
+void changeState(){
+    state += 1;
+    if(state > 2){
+        state = 0;
+        randomized = false;
+    }
+}
 
 void setup() {
     /* Initialization */
@@ -213,15 +240,31 @@ void setup() {
     for (i = 0; i < 8; i++) {
         LMx[i] = false;
     }
-    j = 0;
-    randomizeNote();
+
+    /* Variable Initialization */
+    randomized = false;
 }
 
 void loop() {
-    //j++;
-    //j = j % 3;
     //readLight();
-
-    shiftLED();
-    serialNote(1);
+    if (buttonIsPressed(2)) {
+        changeState();
+    } else {
+        if (state == 0) {
+            /* Standby */
+            shiftLED();  // Ganti ke dynamic LED
+        } else if (state == 1) {
+            /* Randomized */
+            if (!randomized) {
+                randomizeNote();
+                randomized = true;
+            }
+            shiftLED();  // Ganti ke dynamic LED
+            serialNote(1);
+        } else if (state == 2) {
+            /* Playing */
+            shiftLED();  // Ganti ke static LED
+            serialNote(0);
+        }
+    }
 }
