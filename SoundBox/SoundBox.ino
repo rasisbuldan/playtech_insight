@@ -18,7 +18,7 @@
 
 /* Object Declaration */
 BH1750 lightMeter;
-CRGB leds[NUM_LEDS_PER_STRIP];
+CRGB leds[NUM_STRIP][NUM_LEDS_PER_STRIP];
 
 /* Global Variable */
 uint16_t LM[8];  // Lux value [1-8]
@@ -93,47 +93,41 @@ void serialNote() {
 /* LED Color (needs rework) */
 void shiftLED() {
     for (int i = 0; i <= 36; i++) {
-        switch (j) {
-            case 0:
-                leds[i] = CRGB::White;
-                break;
-            case 1:
-                leds[i] = CRGB::White;
-                break;
-            case 2:
-                leds[i] = CRGB::White;
-                break;
-            default:
-                leds[i] = CRGB::White;
-                break;
-        }
+        leds[0][i] = CRGB::Red;
+        leds[1][i] = CRGB::Blue;
+        leds[2][i] = CRGB::Green;
+        leds[3][i] = CRGB::White;
+        leds[4][i] = CRGB::Yellow;
+        leds[5][i] = CRGB::Orange;
+        leds[6][i] = CRGB::Cyan;
+        leds[7][i] = CRGB::Purple;
     }
     FastLED.show();
 }
 
-/* Auto-Calibrate bottom and upper  */
+/* Auto-Calibrate bottom and upper */
+
 
 void setup() {
     /* Initialization */
     Serial.begin(57600);
     Wire.setClock(400000);
     Wire.begin();        // I2C begin
-    lightMeter.begin(CONTINUOUS_LOW_RES_MODE);  // BH1750 begin
+    lightMeter.begin(BH1750::CONTINUOUS_LOW_RES_MODE);  // BH1750 begin
 
     //Serial.println("Starting SOUNDBOX v1.0");
 
     /* WS2811 Setup */
     //Serial.print("Initializing WS2811 LED");
-    FastLED.addLeds<WS2811, 2>(leds, NUM_LEDS_PER_STRIP);
-    FastLED.addLeds<WS2811, 3>(leds, NUM_LEDS_PER_STRIP);
-    FastLED.addLeds<WS2811, 4>(leds, NUM_LEDS_PER_STRIP);
-    FastLED.addLeds<WS2811, 5>(leds, NUM_LEDS_PER_STRIP);
-    FastLED.addLeds<WS2811, 6>(leds, NUM_LEDS_PER_STRIP);
-    FastLED.addLeds<WS2811, 7>(leds, NUM_LEDS_PER_STRIP);
-    FastLED.addLeds<WS2811, 8>(leds, NUM_LEDS_PER_STRIP);
-    FastLED.addLeds<WS2811, 9>(leds, NUM_LEDS_PER_STRIP);
-    FastLED.addLeds<WS2811, 10>(leds, NUM_LEDS_PER_STRIP);
-    FastLED.addLeds<WS2811, 11>(leds, NUM_LEDS_PER_STRIP);
+    FastLED.addLeds<WS2811, 3>(leds[0], NUM_LEDS_PER_STRIP);
+    FastLED.addLeds<WS2811, 4>(leds[1], NUM_LEDS_PER_STRIP);
+    FastLED.addLeds<WS2811, 5>(leds[2], NUM_LEDS_PER_STRIP);
+    FastLED.addLeds<WS2811, 6>(leds[3], NUM_LEDS_PER_STRIP);
+    FastLED.addLeds<WS2811, 7>(leds[4], NUM_LEDS_PER_STRIP);
+    FastLED.addLeds<WS2811, 8>(leds[5], NUM_LEDS_PER_STRIP);
+    FastLED.addLeds<WS2811, 9>(leds[6], NUM_LEDS_PER_STRIP);
+    FastLED.addLeds<WS2811, 10>(leds[7], NUM_LEDS_PER_STRIP);
+
     FastLED.setBrightness(255);
     //Serial.println("Ready!");
 
@@ -150,9 +144,9 @@ void setup() {
 }
 
 void loop() {
-    j++;
-    j = j % 3;
+    //j++;
+    //j = j % 3;
     //readLight();
-    //shiftLED();
+    shiftLED();
     serialNote();
 }
