@@ -1,0 +1,97 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "C:\\Users\\Stoorm\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.1\\cores\\arduino"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "C:\\Users\\Stoorm\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.1\\variants\\eightanaloginputs"
+  },
+  {
+    "Sourcefile": "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\output\\sketch\\SoundBox.ino.cpp",
+    "Include": "BH1750.h",
+    "Includepath": "C:\\Users\\Stoorm\\Documents\\Arduino\\libraries\\BH1750-master"
+  },
+  {
+    "Sourcefile": "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\output\\sketch\\SoundBox.ino.cpp",
+    "Include": "Wire.h",
+    "Includepath": "C:\\Users\\Stoorm\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.1\\libraries\\Wire\\src"
+  },
+  {
+    "Sourcefile": "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\output\\sketch\\SoundBox.ino.cpp",
+    "Include": "FastLED.h",
+    "Includepath": "C:\\Users\\Stoorm\\Documents\\Arduino\\libraries\\FastLED"
+  },
+  {
+    "Sourcefile": "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\output\\sketch\\SoundBox.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\Stoorm\\Documents\\Arduino\\libraries\\BH1750-master\\BH1750.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\Stoorm\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.1\\libraries\\Wire\\src\\Wire.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\Stoorm\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.1\\libraries\\Wire\\src\\utility\\twi.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\Stoorm\\Documents\\Arduino\\libraries\\FastLED\\FastLED.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\Stoorm\\Documents\\Arduino\\libraries\\FastLED\\bitswap.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\Stoorm\\Documents\\Arduino\\libraries\\FastLED\\colorpalettes.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\Stoorm\\Documents\\Arduino\\libraries\\FastLED\\colorutils.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\Stoorm\\Documents\\Arduino\\libraries\\FastLED\\hsv2rgb.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\Stoorm\\Documents\\Arduino\\libraries\\FastLED\\lib8tion.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\Stoorm\\Documents\\Arduino\\libraries\\FastLED\\noise.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\Stoorm\\Documents\\Arduino\\libraries\\FastLED\\platforms.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\Stoorm\\Documents\\Arduino\\libraries\\FastLED\\power_mgt.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\Stoorm\\Documents\\Arduino\\libraries\\FastLED\\wiring.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]

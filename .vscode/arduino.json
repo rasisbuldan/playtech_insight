@@ -3,5 +3,6 @@
     "board": "arduino:avr:nano",
     "port": "COM5",
     "sketch": "SoundBox\\SoundBox.ino",
-    "configuration": "cpu=atmega328old"
+    "configuration": "cpu=atmega328old",
+    "output": "output\\"
 }

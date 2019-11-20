@@ -1,3 +1,5 @@
+#include <Arduino.h>
+#line 1 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
 /****** SOUNDBOX v1.0 ******/
 /* To do:   1. Test WS2811 Color (RGB/GRB) => GRB
             2. Autocalibration (with button input)
@@ -29,6 +31,21 @@ int treshold = 10;  // Lux treshold to trigger note sound
 int i, j;
 
 /* I2C Multiplexer Selector */
+#line 32 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+void tcaselect(uint8_t i);
+#line 40 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+void readLight();
+#line 53 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+void serialNote(boolean random);
+#line 130 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+void randomizeNote();
+#line 150 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+void shiftLED();
+#line 166 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+void setup();
+#line 203 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+void loop();
+#line 32 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
 void tcaselect(uint8_t i) {
     if (i > 7) return;
     Wire.beginTransmission(TCAADDR);
@@ -39,7 +56,7 @@ void tcaselect(uint8_t i) {
 /* Reading lux value of BH1750 */
 void readLight() {
     for (i = 0; i < 8; i++) {
-        Serial.print("L["); 
+        Serial.print("L[");
         Serial.print(i);
         Serial.print("]: ");
         Serial.print(LM[i]);

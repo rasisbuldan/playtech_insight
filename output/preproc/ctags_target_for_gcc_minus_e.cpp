@@ -1,37 +1,43 @@
+# 1 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
 /****** SOUNDBOX v1.0 ******/
 /* To do:   1. Test WS2811 Color (RGB/GRB) => GRB
-            2. Autocalibration (with button input)
-            3. LED color breathing / shift
-            4. Add continous trigger checking
-            5. Randomize note location (sensor)
-*/
 
-#include <BH1750.h>
-#include <FastLED.h>
-#include <Wire.h>
+            2. Autocalibration (with button input)
+
+            3. LED color breathing / shift
+
+            4. Add continous trigger checking
+
+            5. Randomize note location (sensor)
+
+*/
+# 9 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
+# 10 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino" 2
+# 11 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino" 2
+# 12 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino" 2
 
 /* Macro */
-#define NUM_LEDS_PER_STRIP 36
-#define DATA_PIN 3
-#define NUM_STRIP 8
-#define TCAADDR 0x70
+
+
+
+
 
 /* Object Declaration */
 BH1750 lightMeter;
-CRGB leds[NUM_STRIP][NUM_LEDS_PER_STRIP];
+CRGB leds[8][36];
 
 /* Global Variable */
-uint16_t LM[8];  // Lux value [1-8]
+uint16_t LM[8]; // Lux value [1-8]
 boolean LMx[8];
 char note[8] = {'C', 'D', 'E', 'F', 'G', 'A', 'B', 'H'};
 char noteRandom[8];
-int treshold = 10;  // Lux treshold to trigger note sound
+int treshold = 10; // Lux treshold to trigger note sound
 int i, j;
 
 /* I2C Multiplexer Selector */
 void tcaselect(uint8_t i) {
     if (i > 7) return;
-    Wire.beginTransmission(TCAADDR);
+    Wire.beginTransmission(0x70);
     Wire.write(1 << i);
     Wire.endTransmission();
 }
@@ -39,7 +45,7 @@ void tcaselect(uint8_t i) {
 /* Reading lux value of BH1750 */
 void readLight() {
     for (i = 0; i < 8; i++) {
-        Serial.print("L["); 
+        Serial.print("L[");
         Serial.print(i);
         Serial.print("]: ");
         Serial.print(LM[i]);
@@ -67,55 +73,55 @@ void serialNote(boolean random) {
                     switch (i) {
                         case 0:
                             Serial.println(noteRandom[3]);
-                            break;  // N
+                            break; // N
                         case 1:
                             Serial.println(noteRandom[4]);
-                            break;  // D
+                            break; // D
                         case 2:
                             Serial.println(noteRandom[2]);
-                            break;  // U
+                            break; // U
                         case 3:
                             Serial.println(noteRandom[5]);
-                            break;  // B
+                            break; // B
                         case 4:
                             Serial.println(noteRandom[1]);
-                            break;  // OL
+                            break; // OL
                         case 5:
                             Serial.println(noteRandom[6]);
-                            break;  // OR
+                            break; // OR
                         case 6:
                             Serial.println(noteRandom[0]);
-                            break;  // S
+                            break; // S
                         case 7:
                             Serial.println(noteRandom[7]);
-                            break;  // X
+                            break; // X
                     }
                 } else {
                     switch (i) {
                         case 0:
                             Serial.println(note[3]);
-                            break;  // N
+                            break; // N
                         case 1:
                             Serial.println(note[4]);
-                            break;  // D
+                            break; // D
                         case 2:
                             Serial.println(note[2]);
-                            break;  // U
+                            break; // U
                         case 3:
                             Serial.println(note[5]);
-                            break;  // B
+                            break; // B
                         case 4:
                             Serial.println(note[1]);
-                            break;  // OL
+                            break; // OL
                         case 5:
                             Serial.println(note[6]);
-                            break;  // OR
+                            break; // OR
                         case 6:
                             Serial.println(note[0]);
-                            break;  // S
+                            break; // S
                         case 7:
                             Serial.println(note[7]);
-                            break;  // X
+                            break; // X
                     }
                 }
             }
@@ -149,14 +155,14 @@ void randomizeNote() {
 /* LED Color (needs rework) */
 void shiftLED() {
     for (int i = 0; i <= 36; i++) {
-        leds[0][i] = CRGB::White;  // X
-        leds[1][i] = CRGB::White;  // S
-        leds[2][i] = CRGB::White;  // OR
-        leds[3][i] = CRGB::White;  // OL
-        leds[4][i] = CRGB::White;  //  B
-        leds[5][i] = CRGB::White;  // U
-        leds[6][i] = CRGB::White;  // D
-        leds[7][i] = CRGB::White;  // N
+        leds[0][i] = CRGB::White; // X
+        leds[1][i] = CRGB::White; // S
+        leds[2][i] = CRGB::White; // OR
+        leds[3][i] = CRGB::White; // OL
+        leds[4][i] = CRGB::White; //  B
+        leds[5][i] = CRGB::White; // U
+        leds[6][i] = CRGB::White; // D
+        leds[7][i] = CRGB::White; // N
     }
     FastLED.show();
 }
@@ -167,22 +173,22 @@ void setup() {
     /* Initialization */
     Serial.begin(57600);
     Wire.setClock(400000);
-    Wire.begin();                                       // I2C begin
-    lightMeter.begin(BH1750::CONTINUOUS_LOW_RES_MODE);  // BH1750 begin
+    Wire.begin(); // I2C begin
+    lightMeter.begin(BH1750::CONTINUOUS_LOW_RES_MODE); // BH1750 begin
     randomSeed(analogRead(A0));
 
     //Serial.println("Starting SOUNDBOX v1.0");
 
     /* WS2811 Setup */
     //Serial.print("Initializing WS2811 LED");
-    FastLED.addLeds<WS2811, 3, BRG>(leds[0], NUM_LEDS_PER_STRIP);
-    FastLED.addLeds<WS2811, 4, BRG>(leds[1], NUM_LEDS_PER_STRIP);
-    FastLED.addLeds<WS2811, 5, BRG>(leds[2], NUM_LEDS_PER_STRIP);
-    FastLED.addLeds<WS2811, 6, BRG>(leds[3], NUM_LEDS_PER_STRIP);
-    FastLED.addLeds<WS2811, 7, BRG>(leds[4], NUM_LEDS_PER_STRIP);
-    FastLED.addLeds<WS2811, 8, BRG>(leds[5], NUM_LEDS_PER_STRIP);
-    FastLED.addLeds<WS2811, 9, BRG>(leds[6], NUM_LEDS_PER_STRIP);
-    FastLED.addLeds<WS2811, 10, BRG>(leds[7], NUM_LEDS_PER_STRIP);
+    FastLED.addLeds<WS2811, 3, BRG>(leds[0], 36);
+    FastLED.addLeds<WS2811, 4, BRG>(leds[1], 36);
+    FastLED.addLeds<WS2811, 5, BRG>(leds[2], 36);
+    FastLED.addLeds<WS2811, 6, BRG>(leds[3], 36);
+    FastLED.addLeds<WS2811, 7, BRG>(leds[4], 36);
+    FastLED.addLeds<WS2811, 8, BRG>(leds[5], 36);
+    FastLED.addLeds<WS2811, 9, BRG>(leds[6], 36);
+    FastLED.addLeds<WS2811, 10, BRG>(leds[7], 36);
 
     FastLED.setBrightness(255);
     //Serial.println("Ready!");
@@ -190,8 +196,11 @@ void setup() {
     /* BH1750 Setup */
     // Serial.print("Initializing BH1750");
     /* while (!lightMeter.begin()) {
+
         Serial.print(".");
+
     } */
+# 195 "c:\\Users\\Stoorm\\Documents\\GitHub\\insight_playtech\\SoundBox\\SoundBox.ino"
     //Serial.println("Ready!");
     for (i = 0; i < 8; i++) {
         LMx[i] = false;
