@@ -1,2 +1,2 @@
-c:\Users\Stoorm\Documents\GitHub\insight_playtech\output\core\hooks.c.o: \
- C:\Users\Stoorm\AppData\Local\Arduino15\packages\arduino\hardware\avr\1.8.1\cores\arduino\hooks.c
+c:\Users\rss75\Documents\GitHub\playtech_insight\output\core\hooks.c.o: \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino\hooks.c

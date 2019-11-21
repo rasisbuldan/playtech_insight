@@ -1,7 +1,6 @@
-# 1 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\omnibot\\test-gy.ino"
-# 2 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\omnibot\\test-gy.ino" 2
-# 3 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\omnibot\\test-gy.ino" 2
-# 4 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\omnibot\\test-gy.ino" 2
+#include "Wire.h"
+#include "I2Cdev.h"
+#include "MPU6050.h"
 
 MPU6050 mpu;
 int16_t ax, ay, az;

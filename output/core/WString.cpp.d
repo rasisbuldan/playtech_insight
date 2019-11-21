@@ -1,3 +1,3 @@
-c:\Users\Stoorm\Documents\GitHub\insight_playtech\output\core\WString.cpp.o: \
- C:\Users\Stoorm\AppData\Local\Arduino15\packages\arduino\hardware\avr\1.8.1\cores\arduino\WString.cpp \
- C:\Users\Stoorm\AppData\Local\Arduino15\packages\arduino\hardware\avr\1.8.1\cores\arduino\WString.h
+c:\Users\rss75\Documents\GitHub\playtech_insight\output\core\WString.cpp.o: \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino\WString.cpp \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino\WString.h

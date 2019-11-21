@@ -1,5 +1,5 @@
-c:\Users\rss75\Documents\GitHub\playtech_insight\output\core\main.cpp.o: \
- C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino\main.cpp \
+c:\Users\rss75\Documents\GitHub\playtech_insight\output\sketch\test-gy.ino.cpp.o: \
+ c:\Users\rss75\Documents\GitHub\playtech_insight\output\sketch\test-gy.ino.cpp \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/binary.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/WCharacter.h \
@@ -10,4 +10,8 @@ c:\Users\rss75\Documents\GitHub\playtech_insight\output\core\main.cpp.o: \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Printable.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/USBAPI.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\libraries\Wire\src/Wire.h \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Stream.h \
+ C:\Users\rss75\Documents\Arduino\libraries\I2Cdev/I2Cdev.h \
+ C:\Users\rss75\Documents\Arduino\libraries\MPU6050/MPU6050.h

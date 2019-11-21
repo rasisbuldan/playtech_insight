@@ -1,12 +1,18 @@
-# 1 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\omnibot\\test-gy.ino"
-# 2 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\omnibot\\test-gy.ino" 2
-# 3 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\omnibot\\test-gy.ino" 2
-# 4 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\omnibot\\test-gy.ino" 2
+#include <Arduino.h>
+#line 1 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\omnibot\\test-gy.ino"
+#include "Wire.h"
+#include "I2Cdev.h"
+#include "MPU6050.h"
 
 MPU6050 mpu;
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
 
+#line 9 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\omnibot\\test-gy.ino"
+void setup();
+#line 15 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\omnibot\\test-gy.ino"
+void loop();
+#line 9 "c:\\Users\\rss75\\Documents\\GitHub\\playtech_insight\\omnibot\\test-gy.ino"
 void setup(){
     Serial.begin(115200);
     Wire.begin();
