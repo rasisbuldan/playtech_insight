@@ -7,7 +7,7 @@
 #include <Wire.h>
 
 /* Macro */
-#define SET_PIN 8
+#define SET_PIN 9
 #define RX_PIN 11
 #define TX_PIN 10
 
@@ -95,11 +95,13 @@ void getSpeed(int p, int r) {
 /* Transmit parameter to robot */
 void transmit() {
     /* Concat all parameter */
-    message = String(speed1) + String(dir1) + String(speed2) + String(dir2) + String(speed3) + String(dir3);
+    //message = String(speed1) + String(dir1) + String(speed2) + String(dir2) + String(speed3) + String(dir3);
+    //message = angle + pitch + roll + '\n';
+    sprintf(send,"%03d%03d%03d",angle,pitch,roll);
 
     /* Send to HC12 */
-    HC12.print(message);
-    Serial.print("Message sent!");
+    HC12.print(String(send));
+    Serial.print("Message sent! | ");
 }
 
 /* Display parameter and calculation result */
@@ -132,5 +134,6 @@ void setup() {
 
 void loop() {
     displayLog();
+    transmit();
     delay(100);
 }

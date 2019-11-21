@@ -1,6 +1,7 @@
 {
     "programmer": "ArduinoISP",
-    "board": "arduino:avr:uno",
+    "board": "arduino:avr:nano",
     "port": "COM5",
-    "sketch": "omnibot\\RF\\test-rf.ino"
+    "sketch": "omnibot\\omni-tx.ino",
+    "configuration": "cpu=atmega328old"
 }
