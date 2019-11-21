@@ -1,19 +1,17 @@
 #include <SoftwareSerial.h>
 
-#define SET_PIN 10
-
-SoftwareSerial HC12(9,8);  // HC-12 TX Pin (none), HC-12 RX Pin
+SoftwareSerial HC12(10, 11); // HC-12 TX Pin, HC-12 RX Pin
 
 void setup() {
-    Serial.begin(115200);
-    HC12.begin(115200);
-
-    pinMode(8, OUTPUT);
-    digitalWrite(SET_PIN,HIGH);
-    delay(2000);
-    digitalWrite(SET_PIN,LOW);
+  Serial.begin(9600);             // Serial port to computer
+  HC12.begin(9600);               // Serial port to HC12
 }
 
 void loop() {
-    /* .. */
+  while (HC12.available()) {        // If HC-12 has data
+    Serial.write(HC12.read());      // Send the data to Serial monitor
+  }
+  while (Serial.available()) {      // If Serial monitor has data
+    HC12.write(Serial.read());      // Send that data to HC-12
+  }
 }
