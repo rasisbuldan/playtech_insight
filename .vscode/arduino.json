@@ -1,8 +1,6 @@
 {
     "programmer": "ArduinoISP",
-    "board": "arduino:avr:nano",
+    "board": "arduino:avr:uno",
     "port": "COM5",
-    "sketch": "SoundBox\\SoundBox.ino",
-    "configuration": "cpu=atmega328old",
-    "output": "output\\"
+    "sketch": "omnibot\\RF\\test-rf.ino"
 }

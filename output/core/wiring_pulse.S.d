@@ -1,2 +1,2 @@
-c:\Users\Stoorm\Documents\GitHub\insight_playtech\output\core\wiring_pulse.S.o: \
- C:\Users\Stoorm\AppData\Local\Arduino15\packages\arduino\hardware\avr\1.8.1\cores\arduino\wiring_pulse.S
+c:\Users\rss75\Documents\GitHub\playtech_insight\output\core\wiring_pulse.S.o: \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_pulse.S
