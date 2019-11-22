@@ -34,6 +34,7 @@ int treshold = 10;  // Lux treshold to trigger note sound
 int i, j;
 int state;
 boolean randomized;
+int quiz;
 
 /* I2C Multiplexer Selector */
 void tcaselect(uint8_t i) {
@@ -46,7 +47,7 @@ void tcaselect(uint8_t i) {
 /* Reading lux value of BH1750 */
 void readLight() {
     for (i = 0; i < 8; i++) {
-        Serial.print("L["); 
+        Serial.print("L[");
         Serial.print(i);
         Serial.print("]: ");
         Serial.print(LM[i]);
@@ -177,12 +178,42 @@ void shiftLED() {
     FastLED.show();
 }
 
+/* Randomize Quiz Song */
+void randomizeQuiz() {
+    quiz = random(1, 6);
+}
+
+/* Play Quiz */
+void playQuiz() {
+    switch (quiz) {
+        case 1:
+            Serial.println("P");
+            break;
+        case 2:
+            Serial.println("Q");
+            break;
+        case 3:
+            Serial.println("R");
+            break;
+        case 4:
+            Serial.println("S");
+            break;
+        case 5:
+            Serial.println("T");
+            break;
+        case 6:
+            Serial.println("U");
+            break;
+    }
+}
+
 /* Change State */
-void changeState(){
+void changeState() {
     state += 1;
-    if(state > 2){
+    if (state > 3) {
         state = 0;
         randomized = false;
+        randomizeQuiz();
     }
 }
 
@@ -190,14 +221,12 @@ void setup() {
     /* Initialization */
     Serial.begin(57600);
     Wire.setClock(400000);
-    Wire.begin();                                       // I2C begin
-    lightMeter.begin(BH1750::CONTINUOUS_LOW_RES_MODE);  // BH1750 begin
+    Wire.begin();
+    lightMeter.begin(BH1750::CONTINUOUS_LOW_RES_MODE);
     randomSeed(analogRead(A0));
 
     //Serial.println("Starting SOUNDBOX v1.0");
 
-    /* WS2811 Setup */
-    //Serial.print("Initializing WS2811 LED");
     FastLED.addLeds<WS2811, 3, BRG>(leds[0], NUM_LEDS_PER_STRIP);
     FastLED.addLeds<WS2811, 4, BRG>(leds[1], NUM_LEDS_PER_STRIP);
     FastLED.addLeds<WS2811, 5, BRG>(leds[2], NUM_LEDS_PER_STRIP);
@@ -208,20 +237,16 @@ void setup() {
     FastLED.addLeds<WS2811, 10, BRG>(leds[7], NUM_LEDS_PER_STRIP);
 
     FastLED.setBrightness(255);
-    //Serial.println("Ready!");
-
-    /* BH1750 Setup */
-    // Serial.print("Initializing BH1750");
-    /* while (!lightMeter.begin()) {
-        Serial.print(".");
-    } */
-    //Serial.println("Ready!");
+    
     for (i = 0; i < 8; i++) {
         LMx[i] = false;
     }
 
     /* Variable Initialization */
     randomized = false;
+    randomizeQuiz();
+
+    //Serial.println("Ready!");
 }
 
 void loop() {
@@ -238,12 +263,24 @@ void loop() {
                 randomizeNote();
                 randomized = true;
             }
+            if(buttonIsPressed(11))[
+                randomizeNote();
+            ]
             shiftLED();  // Ganti ke dynamic LED
             serialNote(1);
         } else if (state == 2) {
-            /* Playing */
+            /* Quiz (not Randomized) */
+            if (buttonIsPressed(11)) {
+                playQuiz();
+            }
             shiftLED();  // Ganti ke static LED
             serialNote(0);
+        } else if (state == 3) {
+            /* Check note */
+            if(buttonIsPressed(11)){
+                resetAttempt();
+            }
+            checkSequence();
         }
     }
 }

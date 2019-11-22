@@ -6,67 +6,98 @@
 
 #include <SoftwareSerial.h>
 
+/* Macro */
+#define PWM_1 3
+#define PWM_2 5
+#define PWM_3 9
+#define DIR_1 4
+#define DIR_2 6
+#define DIR_3 10
+
+/* Object Declaration */
 SoftwareSerial HC12(12, 11);  // HC-12 TX Pin, HC-12 RX Pin
 
+/* Global Variable */
+char logmsg[100];
 String sinyal;
-String str1, str2, str3;
+String str1, str2, str3, str4, str5, str6;
+int spd1, dir1, spd2, dir2, spd3, dir3;
 byte incomingByte;
+int infra;
 
-void setup() {
-    Serial.begin(57600);  // Serial port to computer
-    HC12.begin(57600);    // Serial port to HC12
-
-    pinMode(3, OUTPUT);   // IN1
-    pinMode(4, OUTPUT);   // IN2
-    pinMode(5, OUTPUT);   // IN3
-    pinMode(6, OUTPUT);   // IN4
-    pinMode(8, OUTPUT);   // SET_PIN
-    pinMode(9, OUTPUT);   // IN5
-    pinMode(10, OUTPUT);  // IN6
-
-    digitalWrite(8, HIGH);
-}
-
-void loop() {
+/* Get data from HC-12 */
+void getReceiver() {
     while (HC12.available()) {         // If HC-12 has data
         incomingByte = HC12.read();    // Store each incoming byte from HC-12
         sinyal += char(incomingByte);  // Add each byte to ReadBuffer string variable
     }
+    delay(10);
+}
 
-    delay(10);  // Refresh rate sync (kalo ga pas datanya jd ngaco)
+/* Turn off motor */
+void resetMotor() {
+    digitalWrite(PWM_1, LOW);
+    digitalWrite(DIR_1, LOW);
+    digitalWrite(PWM_2, LOW);
+    digitalWrite(DIR_2, LOW);
+    digitalWrite(PWM_3, LOW);
+    digitalWrite(DIR_3, LOW);
+}
 
-    if (sinyal.length() < 9) {  // Total panjang string yang ditransmit
-        return;                 // Ulang terus sampe panjangnya pas
+/* Drive motor */
+void driveMotor() {
+    analogWrite(PWM_1, spd1);
+    analogWrite(PWM_2, spd2);
+    analogWrite(PWM_3, spd3);
+    digitalWrite(DIR_1, dir1);
+    digitalWrite(DIR_2, dir2);
+    digitalWrite(DIR_3, dir3);
+}
+
+/* Decompose and convert received data */
+void convertData() {
+    spd1 = (sinyal.substring(0, 3)).toInt();    // Motor1 speed
+    dir1 = (sinyal.substring(3, 4)).toInt();    // Motor1 dir
+    spd2 = (sinyal.substring(4, 7)).toInt();    // Motor2 speed
+    dir2 = (sinyal.substring(7, 8)).toInt();    // Motor2 dir
+    spd3 = (sinyal.substring(8, 11)).toInt();   // Motor3 speed
+    dir3 = (sinyal.substring(11, 12)).toInt();  // Motor3 dir
+}
+
+/* Print log to serial monitor */
+void printLog() {
+    sprintf(logmsg, "Motor1: %d(%d) | Motor2: %d(%d) | Motor3: %d(%d) | Infra: %d", spd1, dir1, spd2, dir2, spd3, dir3, infra);
+    Serial.println(logmsg);
+}
+
+void setup() {
+    /* Protocol Initialization */
+    Serial.begin(57600);  // Serial port to computer
+    HC12.begin(57600);    // Serial port to HC12
+
+    /* Pin initialization */
+    for(int i=3; i<=10; i++){
+        pinMode(i, OUTPUT);
+    }
+
+    digitalWrite(8, HIGH);
+    resetMotor();
+}
+
+void loop() {
+    /* Get Data from HC-12 */
+    getReceiver();
+
+    /* Check string length received */
+    if (sinyal.length() < 9) {
+        /* Terminate loop */
+        return;
     } else {
-        str1 = sinyal.substring(0, 3);      // Motor1 speed
-        str2 = sinyal.substring(3, 6);      // Motor2 speed
-        str3 = sinyal.substring(6, 9);      // Motor3 speed
-        Serial.print("str1: ");
-        Serial.print(str1);
-        Serial.print(" | str2: ");
-        Serial.print(str2);
-        Serial.print(" | str3: ");
-        Serial.println(str3);
+        convertData();
         sinyal = "";
     }
-
-    if (str1 == "045") {
-        digitalWrite(3, HIGH);
-        digitalWrite(4, LOW);
-    } else if (str1 == "090") {
-        digitalWrite(5, HIGH);
-        digitalWrite(6, LOW);
-    } else if (str1 == "135") {
-        digitalWrite(9, HIGH);
-        digitalWrite(10, LOW);
-    }
-    else{
-        /* Turn off motor */
-        digitalWrite(3, LOW);
-        digitalWrite(4, LOW);
-        digitalWrite(5, LOW);
-        digitalWrite(6, LOW);
-        digitalWrite(9, LOW);
-        digitalWrite(10, LOW);
-    }
+    
+    /* Drive motor */
+    printLog();
+    driveMotor();
 }
