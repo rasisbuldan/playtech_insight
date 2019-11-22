@@ -169,7 +169,7 @@ void shiftLED() {
         leds[1][i] = CRGB::White;  // S
         leds[2][i] = CRGB::White;  // OR
         leds[3][i] = CRGB::White;  // OL
-        leds[4][i] = CRGB::White;  //  B
+        leds[4][i] = CRGB::White;  // B
         leds[5][i] = CRGB::White;  // U
         leds[6][i] = CRGB::White;  // D
         leds[7][i] = CRGB::White;  // N

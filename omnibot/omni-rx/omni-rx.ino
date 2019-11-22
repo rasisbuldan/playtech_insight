@@ -1,3 +1,9 @@
+/* OmniRobot v0.2 */
+/* To do:   [x] 1. Add infrared reading and transmit
+            [x] 2. Data decomposition to motor driver
+
+ */
+
 #include <SoftwareSerial.h>
 
 SoftwareSerial HC12(12, 11);  // HC-12 TX Pin, HC-12 RX Pin
@@ -32,9 +38,9 @@ void loop() {
     if (sinyal.length() < 9) {  // Total panjang string yang ditransmit
         return;                 // Ulang terus sampe panjangnya pas
     } else {
-        str1 = sinyal.substring(0, 3);
-        str2 = sinyal.substring(3, 6);
-        str3 = sinyal.substring(6, 9);
+        str1 = sinyal.substring(0, 3);      // Motor1 speed
+        str2 = sinyal.substring(3, 6);      // Motor2 speed
+        str3 = sinyal.substring(6, 9);      // Motor3 speed
         Serial.print("str1: ");
         Serial.print(str1);
         Serial.print(" | str2: ");
@@ -55,6 +61,7 @@ void loop() {
         digitalWrite(10, LOW);
     }
     else{
+        /* Turn off motor */
         digitalWrite(3, LOW);
         digitalWrite(4, LOW);
         digitalWrite(5, LOW);
