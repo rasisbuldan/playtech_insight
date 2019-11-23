@@ -9,6 +9,8 @@
             [x] 7. WS2811 data rate
             [v] 8. Button interrupt (pin 2,3) => JANGAN PAKE INTERRUPT
             [x] 9. Blink when change state
+            [x] 10. Check quiz answers
+            [x] 11. Reset attempt
 */
 
 #include <BH1750.h>
@@ -29,12 +31,22 @@ CRGB leds[NUM_STRIP][NUM_LEDS_PER_STRIP];
 uint16_t LM[8];  // Lux value [1-8]
 boolean LMx[8];
 char note[8] = {'C', 'D', 'E', 'F', 'G', 'A', 'B', 'H'};
+char quizSequence[7][10] = {
+    {'C', 'C', 'D', 'D', 'D', 'E', 'E', 'E', 'F', 'F'},     // 0
+    {'A', 'C', 'D', 'A', 'D', 'F', 'E', 'G', 'F', 'A'},     // 1
+    {'C', 'C', 'D', 'D', 'D', 'E', 'E', 'E', 'F', 'F'},     // 2
+    {'C', 'C', 'D', 'D', 'D', 'E', 'E', 'E', 'F', 'F'},     // 3
+    {'C', 'C', 'D', 'D', 'D', 'E', 'E', 'E', 'F', 'F'},     // 4
+    {'C', 'C', 'D', 'D', 'D', 'E', 'E', 'E', 'F', 'F'},     // 5
+    {'C', 'C', 'D', 'D', 'D', 'E', 'E', 'E', 'F', 'F'}};    // 6
+char quizAttempt[10];
 char noteRandom[8];
 int treshold = 10;  // Lux treshold to trigger note sound
 int i, j;
 int state;
 boolean randomized;
 int quiz;
+boolean quizTrue;
 
 /* I2C Multiplexer Selector */
 void tcaselect(uint8_t i) {
@@ -102,36 +114,51 @@ void serialNote(boolean random) {
                     switch (i) {
                         case 0:
                             Serial.println(note[3]);
+                            addToArray(note[3]);
                             break;  // N
                         case 1:
                             Serial.println(note[4]);
+                            addToArray(note[4]);
                             break;  // D
                         case 2:
                             Serial.println(note[2]);
+                            addToArray(note[2]);
                             break;  // U
                         case 3:
                             Serial.println(note[5]);
+                            addToArray(note[5]);
                             break;  // B
                         case 4:
                             Serial.println(note[1]);
+                            addToArray(note[1]);
                             break;  // OL
                         case 5:
                             Serial.println(note[6]);
+                            addToArray(note[6]);
                             break;  // OR
                         case 6:
                             Serial.println(note[0]);
+                            addToArray(note[0]);
                             break;  // S
                         case 7:
                             Serial.println(note[7]);
+                            addToArray(note[7]);
                             break;  // X
                     }
                 }
+                addToArray();
             }
         } else {
             LMx[i] = false;
         }
         delay(25);
     }
+}
+
+/* Add to Array */
+void addToArray(char not){
+    quizAttempt[j] = not;
+    j++;
 }
 
 /* Randomize Note */
@@ -154,7 +181,7 @@ void randomizeNote() {
     }
 }
 
-/* Check button press (2) */
+/* Check button press */
 boolean buttonIsPressed(int pin) {
     static boolean b1_old = 0;
     boolean b1 = digitalRead(pin);
@@ -180,30 +207,42 @@ void shiftLED() {
 
 /* Randomize Quiz Song */
 void randomizeQuiz() {
-    quiz = random(1, 6);
+    quiz = random(0, 6);
 }
 
 /* Play Quiz */
 void playQuiz() {
     switch (quiz) {
-        case 1:
+        case 0:
             Serial.println("P");
             break;
-        case 2:
+        case 1:
             Serial.println("Q");
             break;
-        case 3:
+        case 2:
             Serial.println("R");
             break;
-        case 4:
+        case 3:
             Serial.println("S");
             break;
-        case 5:
+        case 4:
             Serial.println("T");
             break;
-        case 6:
+        case 5:
             Serial.println("U");
             break;
+        case 6:
+            Serial.println("V");
+            break;
+    }
+}
+
+/* Check quiz sequence by note */
+void checkSequence() {
+    for(i = 0; i<10; i++){
+        if(quizAttempt[i] != quizSequence[quiz][i]){
+            quizTrue = false;
+        }
     }
 }
 
@@ -214,6 +253,10 @@ void changeState() {
         state = 0;
         randomized = false;
         randomizeQuiz();
+    }
+    if(state == 3){
+        j = 0;
+        quizTrue = true;
     }
 }
 
@@ -237,7 +280,7 @@ void setup() {
     FastLED.addLeds<WS2811, 10, BRG>(leds[7], NUM_LEDS_PER_STRIP);
 
     FastLED.setBrightness(255);
-    
+
     for (i = 0; i < 8; i++) {
         LMx[i] = false;
     }
@@ -263,10 +306,8 @@ void loop() {
                 randomizeNote();
                 randomized = true;
             }
-            if(buttonIsPressed(11))[
-                randomizeNote();
-            ]
-            shiftLED();  // Ganti ke dynamic LED
+            if (buttonIsPressed(11)) [randomizeNote();
+            ] shiftLED();  // Ganti ke dynamic LED
             serialNote(1);
         } else if (state == 2) {
             /* Quiz (not Randomized) */
@@ -277,10 +318,20 @@ void loop() {
             serialNote(0);
         } else if (state == 3) {
             /* Check note */
-            if(buttonIsPressed(11)){
+            if (buttonIsPressed(11)) {
                 resetAttempt();
             }
-            checkSequence();
+            if(j == 9){
+                checkSequence();
+                if(quiz == false){
+                    blinkRedLED();
+                }
+                else{
+                    blinkGreenLED();
+                }
+                j = 0;
+            }
+            
         }
     }
 }
