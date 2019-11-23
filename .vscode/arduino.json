@@ -2,6 +2,6 @@
     "programmer": "ArduinoISP",
     "board": "arduino:avr:nano",
     "port": "COM5",
-    "sketch": "omnibot\\omni-tx\\omni-tx.ino",
+    "sketch": "SoundBox\\SoundBox.ino",
     "configuration": "cpu=atmega328old"
 }

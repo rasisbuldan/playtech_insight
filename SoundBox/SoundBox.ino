@@ -19,6 +19,7 @@
 
 /* Macro */
 #define NUM_LEDS_PER_STRIP 36
+#define NUM_LEDS_PER_STRIP_AMBIENT 36
 #define DATA_PIN 3
 #define NUM_STRIP 8
 #define TCAADDR 0x70
@@ -26,23 +27,30 @@
 /* Object Declaration */
 BH1750 lightMeter;
 CRGB leds[NUM_STRIP][NUM_LEDS_PER_STRIP];
+// CRGB ledsAmbient[2][NUM_LEDS_PER_STRIP_AMBIENT];
 
 /* Global Variable */
 uint16_t LM[8];  // Lux value [1-8]
 boolean LMx[8];
 char note[8] = {'C', 'D', 'E', 'F', 'G', 'A', 'B', 'H'};
-char quizSequence[7][10] = {
-    {'C', 'C', 'D', 'D', 'D', 'E', 'E', 'E', 'F', 'F'},     // 0
-    {'A', 'C', 'D', 'A', 'D', 'F', 'E', 'G', 'F', 'A'},     // 1
-    {'C', 'C', 'D', 'D', 'D', 'E', 'E', 'E', 'F', 'F'},     // 2
-    {'C', 'C', 'D', 'D', 'D', 'E', 'E', 'E', 'F', 'F'},     // 3
-    {'C', 'C', 'D', 'D', 'D', 'E', 'E', 'E', 'F', 'F'},     // 4
-    {'C', 'C', 'D', 'D', 'D', 'E', 'E', 'E', 'F', 'F'},     // 5
-    {'C', 'C', 'D', 'D', 'D', 'E', 'E', 'E', 'F', 'F'}};    // 6
-char quizAttempt[10];
+char quizSequence[4][6] = {
+    {'C', 'C', 'D', 'D', 'D', 'E'},  // 0
+    {'A', 'C', 'D', 'A', 'D', 'F'},  // 1
+    {'C', 'C', 'D', 'D', 'D', 'E'},  // 2
+    {'C', 'C', 'D', 'D', 'D', 'E'}   // 3
+};
+int ledColor[6][3] = {
+    {255, 0, 0},     // Red
+    {200, 0, 200},   // Green
+    {0, 0, 255},     // Blue
+    {0, 200, 200},   //
+    {0, 255, 0},     //
+    {200, 200, 0}
+};
+char quizAttempt[6];
 char noteRandom[8];
 int treshold = 10;  // Lux treshold to trigger note sound
-int i, j;
+int i, j, k, l, m, n, s;
 int state;
 boolean randomized;
 int quiz;
@@ -146,7 +154,6 @@ void serialNote(boolean random) {
                             break;  // X
                     }
                 }
-                addToArray();
             }
         } else {
             LMx[i] = false;
@@ -156,8 +163,8 @@ void serialNote(boolean random) {
 }
 
 /* Add to Array */
-void addToArray(char not){
-    quizAttempt[j] = not;
+void addToArray(char noteQuiz) {
+    quizAttempt[j] = noteQuiz;
     j++;
 }
 
@@ -193,16 +200,139 @@ boolean buttonIsPressed(int pin) {
 /* LED Color (needs rework) */
 void shiftLED() {
     for (int i = 0; i <= 36; i++) {
-        leds[0][i] = CRGB::White;  // X
-        leds[1][i] = CRGB::White;  // S
-        leds[2][i] = CRGB::White;  // OR
-        leds[3][i] = CRGB::White;  // OL
-        leds[4][i] = CRGB::White;  // B
-        leds[5][i] = CRGB::White;  // U
-        leds[6][i] = CRGB::White;  // D
-        leds[7][i] = CRGB::White;  // N
+        leds[0][i] = CRGB::Red;  // X
+        leds[1][i] = CRGB::Red;  // S
+        leds[2][i] = CRGB::Red;  // OR
+        leds[3][i] = CRGB::Red;  // OL
+        leds[4][i] = CRGB::Red;  // B
+        leds[5][i] = CRGB::Red;  // U
+        leds[6][i] = CRGB::Red;  // D
+        leds[7][i] = CRGB::Red;  // N
     }
     FastLED.show();
+}
+
+/* Shift LED matrix */
+void shiftLEDMatrix() {
+    for (int s = 0; s <= 7; s++) {
+        ledColor[(s + 1) % 7][1] = ledColor[s][1];
+        ledColor[(s + 1) % 7][2] = ledColor[s][2];
+        ledColor[(s + 1) % 7][3] = ledColor[s][3];
+    }
+}
+/* LED Dynamics */
+void shiftDynamicLED() {
+    shiftLEDMatrix();
+    n = (n + 1) % 2;
+    if (n == 0) {
+        for (int i = 0; i <= 18; i++) {
+            leds[0][i].setRGB(ledColor[0][0], ledColor[0][1], ledColor[0][2]);
+            leds[1][i].setRGB(ledColor[1][0], ledColor[1][1], ledColor[1][2]);
+            leds[2][i].setRGB(ledColor[2][0], ledColor[2][1], ledColor[2][2]);
+            leds[3][i].setRGB(ledColor[3][0], ledColor[3][1], ledColor[3][2]);
+            leds[4][i].setRGB(ledColor[4][0], ledColor[4][1], ledColor[4][2]);
+            leds[5][i].setRGB(ledColor[5][0], ledColor[5][1], ledColor[5][2]);
+            leds[6][i].setRGB(ledColor[0][0], ledColor[0][1], ledColor[0][2]);
+            leds[7][i].setRGB(ledColor[1][0], ledColor[1][1], ledColor[1][2]);
+        }
+        for (int i = 19; i <= 36; i++) {
+            leds[0][i].setRGB(ledColor[0][0], ledColor[0][1], ledColor[0][2]);
+            leds[1][i].setRGB(ledColor[1][0], ledColor[1][1], ledColor[1][2]);
+            leds[2][i].setRGB(ledColor[2][0], ledColor[2][1], ledColor[2][2]);
+            leds[3][i].setRGB(ledColor[3][0], ledColor[3][1], ledColor[3][2]);
+            leds[4][i].setRGB(ledColor[4][0], ledColor[4][1], ledColor[4][2]);
+            leds[5][i].setRGB(ledColor[5][0], ledColor[5][1], ledColor[5][2]);
+            leds[6][i].setRGB(ledColor[0][0], ledColor[0][1], ledColor[0][2]);
+            leds[7][i].setRGB(ledColor[1][0], ledColor[1][1], ledColor[1][2]);
+        }
+    } else if (n == 1) {
+        for (int i = 0; i <= 18; i++) {
+            leds[0][i].setRGB(ledColor[0][0], ledColor[0][1], ledColor[0][2]);
+            leds[1][i].setRGB(ledColor[1][0], ledColor[1][1], ledColor[1][2]);
+            leds[2][i].setRGB(ledColor[2][0], ledColor[2][1], ledColor[2][2]);
+            leds[3][i].setRGB(ledColor[3][0], ledColor[3][1], ledColor[3][2]);
+            leds[4][i].setRGB(ledColor[4][0], ledColor[4][1], ledColor[4][2]);
+            leds[5][i].setRGB(ledColor[5][0], ledColor[5][1], ledColor[5][2]);
+            leds[6][i].setRGB(ledColor[0][0], ledColor[0][1], ledColor[0][2]);
+            leds[7][i].setRGB(ledColor[1][0], ledColor[1][1], ledColor[1][2]);
+        }
+        for (int i = 19; i <= 36; i++) {
+            leds[0][i].setRGB(ledColor[1][0], ledColor[1][1], ledColor[1][2]);
+            leds[1][i].setRGB(ledColor[2][0], ledColor[2][1], ledColor[2][2]);
+            leds[2][i].setRGB(ledColor[3][0], ledColor[3][1], ledColor[3][2]);
+            leds[3][i].setRGB(ledColor[4][0], ledColor[4][1], ledColor[4][2]);
+            leds[4][i].setRGB(ledColor[5][0], ledColor[5][1], ledColor[5][2]);
+            leds[5][i].setRGB(ledColor[0][0], ledColor[0][1], ledColor[0][2]);
+            leds[6][i].setRGB(ledColor[1][0], ledColor[1][1], ledColor[1][2]);
+            leds[7][i].setRGB(ledColor[2][0], ledColor[2][1], ledColor[2][2]);
+        }
+    }
+    FastLED.show();
+}
+
+/* Turn Red LED */
+void turnRedLED() {
+    for (int i = 0; i <= 36; i++) {
+        leds[0][i] = CRGB::Red;  // X
+        leds[1][i] = CRGB::Red;  // S
+        leds[2][i] = CRGB::Red;  // OR
+        leds[3][i] = CRGB::Red;  // OL
+        leds[4][i] = CRGB::Red;  // B
+        leds[5][i] = CRGB::Red;  // U
+        leds[6][i] = CRGB::Red;  // D
+        leds[7][i] = CRGB::Red;  // N
+    }
+    FastLED.show();
+}
+
+/* Turn Green LED */
+void turnGreenLED() {
+    for (int i = 0; i <= 36; i++) {
+        leds[0][i] = CRGB::Green;  // X
+        leds[1][i] = CRGB::Green;  // S
+        leds[2][i] = CRGB::Green;  // OR
+        leds[3][i] = CRGB::Green;  // OL
+        leds[4][i] = CRGB::Green;  // B
+        leds[5][i] = CRGB::Green;  // U
+        leds[6][i] = CRGB::Green;  // D
+        leds[7][i] = CRGB::Green;  // N
+    }
+    FastLED.show();
+}
+
+/* Turn off LED */
+void turnOffLED() {
+    for (int i = 0; i <= 36; i++) {
+        leds[0][i] = CRGB::Black;  // X
+        leds[1][i] = CRGB::Black;  // S
+        leds[2][i] = CRGB::Black;  // OR
+        leds[3][i] = CRGB::Black;  // OL
+        leds[4][i] = CRGB::Black;  // B
+        leds[5][i] = CRGB::Black;  // U
+        leds[6][i] = CRGB::Black;  // D
+        leds[7][i] = CRGB::Black;  // N
+    }
+    FastLED.show();
+}
+
+/* Blink Red LED */
+void blinkRedLED() {
+    for (int l = 0; l <= 5; l++) {
+        turnRedLED();
+        delay(800);
+        turnOffLED();
+        delay(800);
+    }
+}
+
+/* Blink Green LED */
+void blinkGreenLED() {
+    for (int l = 0; l <= 5; l++) {
+        turnGreenLED();
+        delay(800);
+        turnOffLED();
+        delay(800);
+    }
 }
 
 /* Randomize Quiz Song */
@@ -237,10 +367,16 @@ void playQuiz() {
     }
 }
 
+/* Reset attempt */
+void resetAttempt() {
+    j = 0;
+    quizTrue = true;
+}
+
 /* Check quiz sequence by note */
 void checkSequence() {
-    for(i = 0; i<10; i++){
-        if(quizAttempt[i] != quizSequence[quiz][i]){
+    for (i = 0; i < 6; i++) {
+        if (quizAttempt[i] != quizSequence[quiz][i]) {
             quizTrue = false;
         }
     }
@@ -248,13 +384,14 @@ void checkSequence() {
 
 /* Change State */
 void changeState() {
+    Serial.println("Change State!");
     state += 1;
     if (state > 3) {
         state = 0;
         randomized = false;
         randomizeQuiz();
     }
-    if(state == 3){
+    if (state == 3) {
         j = 0;
         quizTrue = true;
     }
@@ -266,9 +403,9 @@ void setup() {
     Wire.setClock(400000);
     Wire.begin();
     lightMeter.begin(BH1750::CONTINUOUS_LOW_RES_MODE);
-    randomSeed(analogRead(A0));
+    //randomSeed(analogRead(A0));
 
-    //Serial.println("Starting SOUNDBOX v1.0");
+    Serial.println("Starting SOUNDBOX v1.0");
 
     FastLED.addLeds<WS2811, 3, BRG>(leds[0], NUM_LEDS_PER_STRIP);
     FastLED.addLeds<WS2811, 4, BRG>(leds[1], NUM_LEDS_PER_STRIP);
@@ -278,6 +415,8 @@ void setup() {
     FastLED.addLeds<WS2811, 8, BRG>(leds[5], NUM_LEDS_PER_STRIP);
     FastLED.addLeds<WS2811, 9, BRG>(leds[6], NUM_LEDS_PER_STRIP);
     FastLED.addLeds<WS2811, 10, BRG>(leds[7], NUM_LEDS_PER_STRIP);
+    //FastLED.addLeds<WS2811, 12, BRG>(ledsAmbient[0], NUM_LEDS_PER_STRIP_AMBIENT);
+    //FastLED.addLeds<WS2811, 13, BRG>(ledsAmbient[1], NUM_LEDS_PER_STRIP_AMBIENT);
 
     FastLED.setBrightness(255);
 
@@ -288,26 +427,31 @@ void setup() {
     /* Variable Initialization */
     randomized = false;
     randomizeQuiz();
+    n = 0;
 
-    //Serial.println("Ready!");
+    Serial.println("Ready!");
 }
 
 void loop() {
     //readLight();
+    Serial.print("state: ");
+    Serial.println(state);
     if (buttonIsPressed(2)) {
         changeState();
     } else {
         if (state == 0) {
             /* Standby */
-            shiftLED();  // Ganti ke dynamic LED
+            shiftDynamicLED;  // Ganti ke dynamic LED
         } else if (state == 1) {
             /* Randomized */
             if (!randomized) {
                 randomizeNote();
                 randomized = true;
             }
-            if (buttonIsPressed(11)) [randomizeNote();
-            ] shiftLED();  // Ganti ke dynamic LED
+            if (buttonIsPressed(11)) {
+                randomizeNote();
+            }
+            shiftDynamicLED();  // Ganti ke dynamic LED
             serialNote(1);
         } else if (state == 2) {
             /* Quiz (not Randomized) */
@@ -321,17 +465,15 @@ void loop() {
             if (buttonIsPressed(11)) {
                 resetAttempt();
             }
-            if(j == 9){
+            if (j == 9) {
                 checkSequence();
-                if(quiz == false){
+                if (quiz == false) {
                     blinkRedLED();
-                }
-                else{
+                } else {
                     blinkGreenLED();
                 }
                 j = 0;
             }
-            
         }
     }
 }
